@@ -1,6 +1,6 @@
 <div class="container mx-auto mt-10 max-w-md bg-white p-6 rounded shadow">
     <h2 class="text-xl font-bold mb-4">Enviar Correo Electrónico</h2>
-    <form (ngSubmit)="enviarCorreo()" [formGroup]="emailForm" class="space-y-4">
+    <form (ngSubmit)="sendEmail()" class="space-y-4">
       <div>
         <label class="block font-medium ">Destino:</label>
         <input type="email" formControlName="destino" placeholder="correo@ejemplo.com" class="w-full border px-3 py-2 rounded"/>

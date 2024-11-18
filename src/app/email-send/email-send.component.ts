@@ -1,33 +1,36 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-@Component({
-  selector: 'app-email-send',
-  standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: './email-send.component.html',
-  styleUrls: ['./email-send.component.css'],
-}) 
-export class EmailSendComponent {
-  emailForm: FormGroup;
+@NgModule({
+  imports: [],
+  declarations: [SendEmailComponent],
+  exports: [SendEmailComponent]
+})
+export class SendEmailComponent {
+  email = '';
+  subject = '';
+  message = '';
 
-  constructor(private fb: FormBuilder) {
-    this.emailForm = this.fb.group({
-      destino: ['', [Validators.required, Validators.email]],
-      asunto: ['', Validators.required],
-      cc: ['', Validators.email],
-      mensaje: ['', Validators.required],
-    });
-  }
+  constructor(private http: HttpClient) {}
 
-  enviarCorreo() {
-    if (this.emailForm.valid) {
-      const emailData = this.emailForm.value;
-      console.log('JSON generado:', JSON.stringify(emailData, null, 2));
-      // Aquí puedes enviar `emailData` al backend con HTTP
-    } else {
-      alert('Por favor, completa todos los campos requeridos.');
-    }
-  }
+  sendEmail() {
+    const emailData = {
+      to: this.email,
+      subject: this.subject,
+      text: this.message,
+      html: `<p>${this.message}</p>`,
+    };
+
+    this.http.post('http://localhost:4200/email-send', emailData).subscribe(
+      (response) => {
+        console.log('Correo enviado', response);
+        alert('Correo enviado correctamente');
+      },
+      (error) => {
+        console.error('Error al enviar el correo', error);
+        alert('Hubo un error al enviar el correo');
+      }
+    );
+  }  
 }
